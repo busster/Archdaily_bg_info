@@ -18,21 +18,29 @@ def downloadimage():
     one = project_link.find('a',href=True)
     two = one['href']
 
-    test = ('http://www.archdaily.com' + two)
+    
     res2 = requests.get('http://www.archdaily.com' + two)
     res2.raise_for_status
 
     site_project = bs4.BeautifulSoup(res2.text, "html.parser")
     image_link = site_project.find('div',{'class':'image-bookmark'})
-    
-    try:
-        image = re.search('data-image="(.+?)"', str(image_link)).group(1)
-    except AttributeError:
-        image = 'Sorry dunno what happened'
+    image_car = image_link.find('a',href=True)
+    image_car = image_car['href']
 
-    data = urllib.request.urlretrieve((image), 'C:/Users/jason/Desktop/test.jpg')
+    res3 = requests.get(image_car)
+    res3.raise_for_status
 
-    print (image)
+    site_project = bs4.BeautifulSoup(res2.text, "html.parser")
+    image_link = site_project.find('div',{'class':'image-bookmark'})
+
+    # try:
+    #     image = re.search('data-image="(.+?)"', str(image_link)).group(1)
+    # except AttributeError:
+    #     image = 'Sorry dunno what happened'
+
+    # data = urllib.request.urlretrieve((image), 'C:/Users/jason/Desktop/test.jpg')
+
+    print (image_car)
 
     # # first project's page extension
     # project_link_ref = project_link[0].get('href')
