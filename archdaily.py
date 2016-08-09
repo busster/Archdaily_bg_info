@@ -4,6 +4,7 @@ import ctypes
 import datetime
 import time
 from apscheduler.scheduler import Scheduler
+import re
 
 
 def downloadimage():
@@ -21,10 +22,17 @@ def downloadimage():
     res2 = requests.get('http://www.archdaily.com' + two)
     res2.raise_for_status
 
-
+    site_project = bs4.BeautifulSoup(res2.text, "html.parser")
+    image_link = site_project.find('div',{'class':'image-bookmark'})
     
+    try:
+        image = re.search('data-image="(.+?)"', str(image_link)).group(1)
+    except AttributeError:
+        image = 'Sorry dunno what happened'
 
-    print (test)
+    data = urllib.request.urlretrieve((image), 'C:/Users/jason/Desktop/test.jpg')
+
+    print (image)
 
     # # first project's page extension
     # project_link_ref = project_link[0].get('href')
