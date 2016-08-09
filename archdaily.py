@@ -32,8 +32,16 @@ def downloadimage():
     image_car = image_link.find('a',href=True)
     image_car = image_car['href']
     specs = site_project.find('ul',{'class':'char-list char-list-box '})
-    location = 'C:/Users/jason/Desktop/test'
-    location = open('project_info','w')
+    
+    os.chdir(os.path.join(os.getenv('userprofile'),'Desktop'))
+    location = 'archdaily_project'
+    dir = os.path.dirname(location)
+    if not os.path.exists(location):
+        os.makedirs(location)
+
+    os.chdir(os.path.join(os.getenv('userprofile'),'Desktop','archdaily_project'))
+
+    location = open('project_info.txt','w')
     location.write(specs.text)
     location.close()
 
@@ -51,9 +59,9 @@ def downloadimage():
     except AttributeError:
         image = 'Sorry dunno what happened'
 
-    data = urllib.request.urlretrieve((image), 'C:/Users/jason/Desktop/test.jpg')
+    data = urllib.request.urlretrieve((image), os.path.join(os.getenv('userprofile'),'Desktop','archdaily_project','project.jpg'))
 
-    print (specs.text)
+    #print (specs.text)
 
     # # first project's page extension
     # project_link_ref = project_link[0].get('href')
