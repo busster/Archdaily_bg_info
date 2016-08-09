@@ -32,9 +32,11 @@ def downloadimage():
     image_car = image_link.find('a',href=True)
     image_car = image_car['href']
     specs = site_project.find('ul',{'class':'char-list char-list-box '})
-    for li in specs:
-        cat = specs.find('h3',{'class':'char-title'})
-        print (cat)
+    location = 'C:/Users/jason/Desktop/test'
+    location = open('project_info','w')
+    location.write(specs.text)
+    location.close()
+
 
     res3 = requests.get(image_car)
     res3.raise_for_status
@@ -51,7 +53,7 @@ def downloadimage():
 
     data = urllib.request.urlretrieve((image), 'C:/Users/jason/Desktop/test.jpg')
 
-    print (specs)
+    print (specs.text)
 
     # # first project's page extension
     # project_link_ref = project_link[0].get('href')
