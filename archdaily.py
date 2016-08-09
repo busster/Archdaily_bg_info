@@ -4,6 +4,7 @@ import ctypes
 import datetime
 import time
 from apscheduler.scheduler import Scheduler
+import re
 
 
 def downloadimage():
@@ -13,18 +14,54 @@ def downloadimage():
 
     # Parse the page to find the first project
     site = bs4.BeautifulSoup(res.text, "html.parser")
-    project_link = site.find('ul',{'class':'afd-search-list'})
+    #project_link = site.findAll('ul',{'class':'afd-search-list'})
+
+    project_link = site.findAll('li',{'class':'afd-search-list__item'})
+    
+
+    project_link = project_link[1]
     one = project_link.find('a',href=True)
     two = one['href']
 
-    test = ('http://www.archdaily.com' + two)
+    
     res2 = requests.get('http://www.archdaily.com' + two)
     res2.raise_for_status
 
-
+    site_project = bs4.BeautifulSoup(res2.text, "html.parser")
+    image_link = site_project.find('div',{'class':'image-bookmark'})
+    image_car = image_link.find('a',href=True)
+    image_car = image_car['href']
+    specs = site_project.find('ul',{'class':'char-list char-list-box '})
     
+    os.chdir(os.path.join(os.getenv('userprofile'),'Desktop'))
+    location = 'archdaily_project'
+    dir = os.path.dirname(location)
+    if not os.path.exists(location):
+        os.makedirs(location)
 
-    print (test)
+    os.chdir(os.path.join(os.getenv('userprofile'),'Desktop','archdaily_project'))
+
+    location = open('project_info.txt','w')
+    location.write(specs.text)
+    location.close()
+
+
+    res3 = requests.get(image_car)
+    res3.raise_for_status
+
+    site_car = bs4.BeautifulSoup(res3.text, "html.parser")
+    theimage = site_car.find('div',{'class':'table-display'})
+    theimage = str(theimage)
+
+
+    try:
+        image = re.search('"url_large":"(.+?)"', str(theimage)).group(1)
+    except AttributeError:
+        image = 'Sorry dunno what happened'
+
+    data = urllib.request.urlretrieve((image), os.path.join(os.getenv('userprofile'),'Desktop','archdaily_project','project.jpg'))
+
+    #print (specs.text)
 
     # # first project's page extension
     # project_link_ref = project_link[0].get('href')
