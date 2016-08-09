@@ -32,6 +32,8 @@ def downloadimage():
     image_car = image_link.find('a',href=True)
     image_car = image_car['href']
     specs = site_project.find('ul',{'class':'char-list char-list-box '})
+    name = site_project.find('h1',{'class':'afd-title-big afd-title-big--bmargin-small afd-title-big--pbottom afd-relativeposition'})
+    date = site_project.find('li',{'class':'theDate'})
     
     os.chdir(os.path.join(os.getenv('userprofile'),'Desktop'))
     location = 'archdaily_project'
@@ -42,6 +44,8 @@ def downloadimage():
     os.chdir(os.path.join(os.getenv('userprofile'),'Desktop','archdaily_project'))
 
     location = open('project_info.txt','w')
+    location.write(name.text.strip(' \t\n\r'))
+    location.write('\nPosted: ' + date.text.strip(' '))
     location.write(specs.text)
     location.close()
 
