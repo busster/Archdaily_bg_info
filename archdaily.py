@@ -55,11 +55,19 @@ def downloadimage():
 
     site_car = bs4.BeautifulSoup(res3.text, "html.parser")
     theimage = site_car.find('div',{'class':'table-display'})
-    theimage = str(theimage)
+    # theimage = str(theimage)
+    
+    # print (theimage.encode("utf-8"))
+    location = open('debug.txt','w')
+    location.write(str(theimage.encode("utf-8")))
+    location.close()
 
+    # .encode("utf-8")
 
     try:
         image = re.search('"url_large":"(.+?)"', str(theimage)).group(1)
+    except AttributeError:
+        image = re.search('url_large&quot;:&quot;(.+?);,&quot;', str(theimage)).group(1)
     except AttributeError:
         image = 'Sorry dunno what happened'
 
